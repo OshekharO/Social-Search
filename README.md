@@ -36,11 +36,6 @@ Social Search is a web application that allows users to search for social media 
 
 If you encounter any issues or bugs, please report them in the [Issues](https://github.com/OshekharO/Social-Search/issues) section.
 
-### Support
--------
-
-If you need support or have questions, please contact me at [shekhersaksham@gmail.com](mailto: shekhersaksham@gmail.com).
-
 ### Contributing
 ------------
 
