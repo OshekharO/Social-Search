@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Social Search: Social Media Search Engine</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <style>
+   body {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #616370;
+    background: #26272c;
+    height: 100%;
+    position: relative;
+    margin: 1.5rem;
+   }
+
+   .btn {
+    width: 100%;
+    height: 40px;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #337ab7;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+   }
+   .btn:hover {
+    background-color: #23527c;
+   }
+   .result {
+    margin-top: 20px;
+   }
+   .result .alert {
+    margin-bottom: 10px;
+   }
+   .social-media-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+   }
+  </style>
+ </head>
+ <body class="bg-dark text-light">
+  <div class="container py-2">
+   <h1 class="font-monospace text-center mb-3 mt-3">Social Search</h1>
+   <form id="form">
+    <div class="form-group">
+     <label class="fs-6 font-monospace badge bg-danger mb-2 mt-2" for="username">Enter a username:</label>
+     <input type="text" id="username" class="form-control font-monospace" placeholder="Username" />
+    </div>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-3">
+     <button class="btn btn-outline-success font-monospace">Search</button>
+    </div>
+   </form>
+   <div class="result"></div>
+  </div>
+
+  <script>
+   const apiUrl = "https://cors-bypasser-gilt.vercel.app/fetchdata?url=";
+   const socialMediaProfiles = [
+    { name: "GitHub", url: `https://github.com/{username}`, icon: '<i class="fab fa-github"></i>' },
+    { name: "TrustCafe", url: `https://www.trustcafe.io/en/user/{username}/`, icon: '<i class="fas fa-coffee"></i>' },
+    { name: "LinkedIn", url: `https://www.linkedin.com/in/{username}`, icon: '<i class="fab fa-linkedin"></i>' },
+    { name: "YouTube", url: `https://www.youtube.com/@{username}`, icon: '<i class="fab fa-youtube"></i>' },
+    { name: "Instagram", url: `https://www.instagram.com/{username}`, icon: '<i class="fab fa-instagram"></i>' },
+    { name: "Mastodon", url: `https://mastodon.social/@{username}`, icon: '<i class="fab fa-mastodon"></i>' },
+    { name: "CodePen", url: `https://codepen.io/{username}`, icon: '<i class="fab fa-codepen"></i>' },
+    { name: "Facebook", url: `https://www.facebook.com/{username}`, icon: '<i class="fab fa-facebook"></i>' },
+    { name: "Codeberg", url: `https://codeberg.org/{username}`, icon: '<i class="fas fa-code"></i>' },
+    { name: "Pinterest", url: `https://www.pinterest.com/{username}`, icon: '<i class="fab fa-pinterest"></i>' },
+    { name: "Twitter", url: `https://x.com/{username}`, icon: '<i class="fab fa-twitter"></i>' },
+   ];
+   document.querySelector("button").addEventListener("click", (e) => {
+    e.preventDefault();
+    const username = document.querySelector("#username").value.trim();
+    if (username) {
+     fetchSocialMediaProfiles(username);
+    }
+   });
+
+   function fetchSocialMediaProfiles(username) {
+    const resultContainer = document.querySelector(".result");
+    resultContainer.innerHTML = "";
+    socialMediaProfiles.forEach((profile) => {
+     const url = profile.url.replace("{username}", username);
+     const icon = profile.icon;
+     fetch(apiUrl + encodeURIComponent(url))
+      .then((response) => response.text())
+      .then((html) => {
+       const parser = new DOMParser();
+       const doc = parser.parseFromString(html, "text/html");
+       const title = doc.title;
+       if (title && title !== "404 Not Found") {
+        const alertBox = document.createElement("div");
+        alertBox.className = "alert alert-info font-monospace";
+        const link = document.createElement("a");
+        link.href = url;
+        link.innerHTML = `${icon} ${profile.name}`;
+        alertBox.appendChild(link);
+        resultContainer.appendChild(alertBox);
+       }
+      })
+      .catch((error) => console.error(error));
+    });
+   }
+  </script>
+ </body>
+</html>
